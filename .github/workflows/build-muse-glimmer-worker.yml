@@ -21,6 +21,16 @@ jobs:
         run: |
           ls executorch/examples/models/muse-glimmer
           head -n 5 executorch/README.md
+      - name: Install build dependencies
+        run: |
+          brew install cmake ninja || true
+          cmake --version
+          ninja --version || echo "ninja not installed"
+      - name: Configure CMake
+        run: |
+          cd executorch
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DEXECUTORCH_BUILD_MUSE_GLIMMER=ON
+        continue-on-error: true
       - name: Create dummy worker binary
         run: |
           echo '#!/bin/bash' > muse_glimmer_worker
