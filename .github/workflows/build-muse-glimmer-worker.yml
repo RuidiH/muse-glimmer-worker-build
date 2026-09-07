@@ -11,8 +11,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Show Xcode
         run: xcodebuild -version
-      - name: Upload placeholder artifact
+      - name: Create dummy worker binary
+        run: |
+          echo '#!/bin/bash' > muse_glimmer_worker
+          echo 'echo "muse_glimmer_worker built on $(uname -a)"' >> muse_glimmer_worker
+          chmod +x muse_glimmer_worker
+          ls -l muse_glimmer_worker
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: muse-glimmer-worker
-          path: /tmp/placeholder.txt
+          path: muse_glimmer_worker
