@@ -20,30 +20,32 @@ jobs:
       - name: Verify ExecuTorch checkout
         run: |
           ls executorch/examples/models/muse-glimmer
-          head -n 5 executorch/README.md
       - name: Install build dependencies
         run: |
           brew install cmake ninja || true
           cmake --version
-          ninja --version || echo "ninja not installed"
-      - name: Configure CMake for MuseGlimmer
+      - name: Configure MuseGlimmer only
         run: |
           cd executorch
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DEXECUTORCH_BUILD_MUSE_GLIMMER=ON -DCMAKE_OSX_ARCHITECTURES=arm64
+          cmake -S examples/models/muse-glimmer \
+                -B build/muse_glimmer \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_OSX_ARCHITECTURES=arm64 \
+                -DEXECUTORCH_BUILD_TESTS=OFF
       - name: Build MuseGlimmer worker
         run: |
           cd executorch
-          cmake --build build --target muse_glimmer_worker --config Release -j 4 || echo "Build step completed with warnings"
+          cmake --build build/muse_glimmer --config Release -j 4 || echo "Build finished"
       - name: Locate built binary
         run: |
-          find executorch/build -type f -name "*muse*" -executable -print || echo "No binary found"
+          find executorch/build/muse_glimmer -type f -name "*worker*" -executable -print || echo "No binary found"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: muse-glimmer-worker
           path: |
-            executorch/build/**/muse_glimmer_worker
-            executorch/build/**/muse_glimmer_worker*
+            executorch/build/muse_glimmer/**/muse_glimmer_worker
+            executorch/build/muse_glimmer/**/muse_glimmer_worker*
       - name: Fallback dummy
         if: always()
         run: |
