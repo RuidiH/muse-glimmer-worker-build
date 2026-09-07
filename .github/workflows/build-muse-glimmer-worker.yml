@@ -1,0 +1,18 @@
+name: Build MuseGlimmer Worker macOS
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Show Xcode
+        run: xcodebuild -version
+      - name: Upload placeholder artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: muse-glimmer-worker
+          path: /tmp/placeholder.txt
