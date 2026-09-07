@@ -14,7 +14,7 @@ jobs:
       - name: Checkout ExecuTorch
         uses: actions/checkout@v4
         with:
-          repository: facebookincubator/executorch
+          repository: pytorch/executorch
           ref: main
           path: executorch
       - name: Verify ExecuTorch checkout
