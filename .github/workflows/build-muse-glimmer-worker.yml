@@ -7,10 +7,20 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - name: Checkout
+      - name: Checkout workflow repo
         uses: actions/checkout@v4
       - name: Show Xcode
         run: xcodebuild -version
+      - name: Checkout ExecuTorch
+        uses: actions/checkout@v4
+        with:
+          repository: facebookincubator/executorch
+          ref: main
+          path: executorch
+      - name: Verify ExecuTorch checkout
+        run: |
+          ls executorch/examples/models/muse-glimmer
+          head -n 5 executorch/README.md
       - name: Create dummy worker binary
         run: |
           echo '#!/bin/bash' > muse_glimmer_worker
