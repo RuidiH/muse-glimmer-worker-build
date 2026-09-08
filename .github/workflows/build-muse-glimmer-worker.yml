@@ -47,10 +47,11 @@ jobs:
         working-directory: executorch
         env:
           Python3_EXECUTABLE: ${{ env.CONDA }}/bin/python
+          CMAKE_BUILD_PARALLEL_LEVEL: 2
         run: |
           source $CONDA/etc/profile.d/conda.sh
           conda activate base
-          make muse-glimmer-mlx
+          make -j2 muse-glimmer-mlx
       - name: Verify binaries
         if: ${{ !inputs.dry_run }}
         working-directory: executorch
