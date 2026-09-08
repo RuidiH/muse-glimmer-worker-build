@@ -6,6 +6,11 @@ on:
         description: ExecuTorch commit/branch/tag to build
         required: false
         default: 7a690f8cf8aec5a170d677ffebda28ba49c479c9
+      dry_run:
+        description: Run dry-run without building
+        required: false
+        default: false
+        type: boolean
   push:
     branches: [ main ]
 jobs:
@@ -38,6 +43,7 @@ jobs:
           conda activate base
           python install_executorch.py
       - name: Build Muse Glimmer with MLX
+        if: ${{ !inputs.dry_run }}
         working-directory: executorch
         env:
           Python3_EXECUTABLE: ${{ env.CONDA }}/bin/python
@@ -46,6 +52,7 @@ jobs:
           conda activate base
           make muse-glimmer-mlx
       - name: Verify binaries
+        if: ${{ !inputs.dry_run }}
         working-directory: executorch
         run: |
           BIN_DIR=cmake-out/examples/models/muse-glimmer
@@ -61,6 +68,7 @@ jobs:
           fi
           echo "Success: built solo_runner, dflash_runner and muse_glimmer_worker"
       - name: Upload artifact
+        if: ${{ !inputs.dry_run }}
         uses: actions/upload-artifact@v4
         with:
           name: muse-glimmer-worker-mlx
