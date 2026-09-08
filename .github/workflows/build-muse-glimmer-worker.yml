@@ -34,10 +34,16 @@ jobs:
       - name: Install ExecuTorch Python deps
         working-directory: executorch
         run: |
+          source $CONDA/etc/profile.d/conda.sh
+          conda activate base
           python install_executorch.py
       - name: Build Muse Glimmer with MLX
         working-directory: executorch
+        env:
+          Python3_EXECUTABLE: ${{ env.CONDA }}/bin/python
         run: |
+          source $CONDA/etc/profile.d/conda.sh
+          conda activate base
           make muse-glimmer-mlx
       - name: Verify binaries
         working-directory: executorch
